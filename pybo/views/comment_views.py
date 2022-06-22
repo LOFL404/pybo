@@ -22,10 +22,10 @@ def comment_create_question(request, question_id):
             comment.save()
             return redirect('{}#comment_{}'.format(resolve_url('pybo:detail',
                     question_id=comment.question.id), comment.id))
-        else:
-            form = CommentForm()
-        context = {'form': form}
-        return render(request, 'pybo/comment_form.html', context)
+    else:
+        form = CommentForm()
+    context = {'form': form}
+    return render(request, 'pybo/comment_form.html', context)
 
 @login_required(login_url='common:login')
 def comment_modify_question(request, comment_id):
@@ -46,10 +46,10 @@ def comment_modify_question(request, comment_id):
             comment.save()
             return redirect('{}#comment_{}'.format(resolve_url('pybo:detail',
                     question_id=comment.question.id), comment.id))
-        else:
-            form = CommentForm(instance=comment)
-        context = {'form': form}
-        return render(request, 'pybo/comment_form.html', context)
+    else:
+        form = CommentForm(instance=comment)
+    context = {'form': form}
+    return render(request, 'pybo/comment_form.html', context)
 
 @login_required(login_url='common:login')
 def comment_delete_question(request, comment_id):
@@ -80,10 +80,10 @@ def comment_create_answer(request, answer_id):
             comment.save()
             return redirect('{}#comment_{}'.format(resolve_url('pybo:detail',
                     question_id=comment.answer.question.id), comment.id))
-        else:
-            form = CommentForm()
-        context = {'form': form}
-        return render(request, 'pybo/comment_form.html', context)
+    else:
+        form = CommentForm()
+    context = {'form': form}
+    return render(request, 'pybo/comment_form.html', context)
 
 @login_required(login_url='common:login')
 def comment_modify_answer(request, comment_id):
@@ -104,10 +104,10 @@ def comment_modify_answer(request, comment_id):
             comment.save()
             return redirect('{}#comment_{}'.format(resolve_url('pybo:detail',
                     question_id=comment.answer.question.id), comment.id))
-        else:
-            form = CommentForm(instance=comment)
-        context = {'form': form}
-        return render(request, 'pybo/comment_form.html', context)
+    else:
+        form = CommentForm(instance=comment)
+    context = {'form': form}
+    return render(request, 'pybo/comment_form.html', context)
 
 @login_required(login_url='common:login')
 def comment_delete_answer(request, comment_id):

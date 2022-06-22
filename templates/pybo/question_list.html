@@ -2,19 +2,36 @@
 {% load pybo_filter %}
 {% block content %}
 <div class="container my-3">
+    <div class="row">
+        <div class="col-sm-12 col-md-3 col-lg-2 p-2">
+            <!-- Sidebar  -->
+            <nav id="sidebar" class="border-top border-secondary">
+                <div class="list-group">
+                    {% for cat in category_list %}
+                        {% if cat == category %}
+                            <a class="rounded-0 list-group-item list-group-item-action list-group-item-light active"
+                               href="{{ cat.get_absolute_url }}">{{ cat.description }}</a>
+                        {% else %}
+                            <a class="rounded-0 list-group-item list-group-item-action list-group-item-light"
+                               href="{{ cat.get_absolute_url }}">{{ cat.description }}</a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </nav>
+        </div>
+    </div>
     <div class="row justify-content-between my-3">
         <div class="col-2">
             <select class="form-control so">
                 <option value="recent" {% if so == 'recent' %}selected{% endif %}>
                     최신순
                 </option>
-                <option value="recent" {% if so == 'recommend' %}selected{% endif %}>
+                <option value="recommend" {% if so == 'recommend' %}selected{% endif %}>
                     추천순
                 </option>
-                <option value="recent" {% if so == 'poopular' %}selected{% endif %}>
+                <option value="popular" {% if so == 'popular' %}selected{% endif %}>
                     인기순
                 </option>
-
             </select>
         </div>
         <div class="col-4 input-group">
@@ -71,48 +88,42 @@
     </table>
     <!-- 페이징 처리 시작-->
     <ul class="pagination justify-content-center">
-        <!-- 이전 페이지 -->
-        {% if question_list.has_previous %}
+        <!----이전페이지---->
+        {% if answer_list.has_previous %}
         <li class="page-item">
-            <a class="page-link"
-              data-page="{{ question_list.previous_page_number }}" href="#">
-                이전
-            </a>
+            <a class="page-link" href="?page={{answer_list.previous_page_number}}">이전</a>
         </li>
         {% else %}
         <li class="page-item disabled">
-            <a class="page-link" tabindex="-1" aria-disabled="true" href="#">
-                이전
-            </a>
+            <a class="page-link" tabindex="-1" aria-disabled="true" href="#">이전</a>
         </li>
         {% endif %}
-        <!-- 페이지 리스트 -->
-        {% for page_number in question_list.paginator.page_range %}
-        {% if page_number >= question_list.number|add:-5 and page_number <= question_list.number|add:5 %}
-            {% if page_number == question_list.number %}
+        <!-----페이지리스트----->
+
+        {% for page_number in answer_list.paginator.page_range %}
+            {% if page_number == answer_list.number %}
+
             <li class="page-item active" aria-current="page">
-                <a class="page-link" data-page="{{ page_number }}" href="#">
-                    {{ page_number }}
-                </a>
+                <a class="page-link" href="?page={{page_number}}">{{page_number}}</a>
             </li>
             {% else %}
             <li class="page-item">
-                <a class="page-link" data-page="{{ page_number }}" href="#">
-                    {{ page_number }}
-                </a>
+                <a class="page-link" href="?page={{page_number}}"></a>
             </li>
             {% endif %}
-        {% endif %}
         {% endfor %}
-        <!-- 다음 페이지 -->
-        {% if question_list.has_next %}
+        <!-----다음페이지------>
+        {% if answer_list.has_next %}
         <li class="page-item">
-            <a class="page-link"
-               data-page="{{ question_list.next_page_number }}" href="#">
-                다음
-            </a>
+            <a class="page-link" href="?page={{answer_list.next_page_number}}">다음</a>
         </li>
         {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" tabindex="-1" aria-disabled="true" href="#">다음</a>
+        </li>
+        {% endif %}
+    </ul>
+    <!-----페이징처리 끝------->{% else %}
         <li class="page-item disabled">
             <a class="page-link" tabindex="-1" aria-disabled="true" href="#">
                 다음
@@ -125,6 +136,7 @@
         질문 등록하기
     </a>
 </div>
+
 <form id="searchForm" method="get" action="{% url 'index' %}">
     <input type="hidden" id="kw" name="kw" value="{{ kw|default_if_none:'' }}">
     <input type="hidden" id="page" name="page" value="{{ page }}">

@@ -2,9 +2,34 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect, resolve_url
 from django.utils import timezone
+from django.core.paginator import Paginator
 
 from ..forms import AnswerForm
 from ..models import Question, Answer
+
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[-1].strip()
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
+def detail_index(request, question=None): #답변 페이징 추가한 부분
+
+    # 입력 파라미터
+    page=request.GET.get('page', '1')
+
+    #조회#########
+    answer_list=Answer.objects.filter(question=question).order_by('-create_date')
+
+    #페이징###########
+    paginator_a=Paginator(answer_list, 10)
+    page_obj_a=paginator_a.get_page(page)
+
+    ###
+    context={'answer_list': page_obj_a}
+    return render(request, 'pybo/question_detail.html', context)
 
 @login_required(login_url='common:login')
 def answer_create(request, question_id):
